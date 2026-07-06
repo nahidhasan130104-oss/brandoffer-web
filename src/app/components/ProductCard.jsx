@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 
 export default function ProductCard({
   id,
@@ -11,6 +13,7 @@ export default function ProductCard({
   discount,
 }) {
   const { addToCart } = useCart();
+  const { toggleWishlist, isWishlisted } = useWishlist();
 
   const product = {
     id,
@@ -22,7 +25,17 @@ export default function ProductCard({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+    <div className="relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
+
+      {/* Wishlist */}
+      <button
+        type="button"
+        onClick={() => toggleWishlist(product)}
+        className="absolute top-3 right-3 text-2xl z-10"
+      >
+        {isWishlisted(id) ? "❤️" : "🤍"}
+      </button>
+
       <img
         src={image}
         alt={title}
@@ -52,13 +65,23 @@ export default function ProductCard({
               {discount}% OFF
             </p>
           </div>
+        </div>
 
+        <div className="flex flex-col gap-2 mt-4">
           <button
+            type="button"
             onClick={() => addToCart(product)}
             className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800"
           >
             🛒 Add to Cart
           </button>
+
+          <Link
+            href={`/product/${id}`}
+            className="text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          >
+            View Details
+          </Link>
         </div>
       </div>
     </div>
